@@ -1,6 +1,6 @@
 # web-ui-kit
 
-Shared UI building blocks for libsql's sql tool, gscope and dewarp-viewer, in two layers:
+Shared UI building blocks for libsql's sql tool, gscope and dewarp-viewer-demo, in two layers:
 
 | Package | Folder | What it holds |
 | --- | --- | --- |
@@ -59,8 +59,7 @@ html { @include ui.theme(mat.$azure-palette); }
 - `libsql/tools/sql/ui`: the sql tool's web UI (grid, split panes, forms, theme, hex dump, dialogs; the report engine's
   exporters and chart drawing).
 - `gscope/frontend`: the dashboard's sparkline charts and size pipe.
-- `dewarp-viewer-angular`: the dewarp viewer now lives in `@web-ui-kit/angular/dewarp-viewer` and `@web-ui-kit/core/dewarp`;
-  the demo app there still has its own copy until it is switched over.
+- `dewarp-viewer-demo`: the demo page of `ui-dewarp-viewer` (`@web-ui-kit/angular/dewarp-viewer` over `@web-ui-kit/core/dewarp`).
 
 ## License
 

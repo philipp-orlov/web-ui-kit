@@ -1,7 +1,7 @@
 {
   "name": "@web-ui-kit/angular",
   "version": "0.1.0",
-  "description": "Shared Angular components and framework-free exporters for libsql, gscope and dewarp-viewer.",
+  "description": "Shared Angular components and framework-free exporters for libsql, gscope and dewarp-viewer-demo.",
   "license": "Apache-2.0",
   "sideEffects": false,
   "peerDependencies": {
