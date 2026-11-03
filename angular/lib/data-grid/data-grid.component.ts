@@ -16,9 +16,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatInput } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
+import type { PageEvent } from '@angular/material/paginator';
 
 import { GridCellDirective, GridGroupHeaderDirective } from './data-grid.directives';
 import {
@@ -31,8 +32,8 @@ import {
   GroupDescriptor,
   SortDescriptor,
   SortDirection,
-} from '@ui-kit/core/grid';
-import { buildView, columnText, columnTitle, columnValue, effectiveSort, filterItems, moveItem, sortItems } from '@ui-kit/core/grid';
+} from '@web-ui-kit/core/grid';
+import { buildView, columnText, columnTitle, columnValue, effectiveSort, filterItems, moveItem, sortItems } from '@web-ui-kit/core/grid';
 
 const DRAG_THRESHOLD_PX = 5;
 const MIN_COLUMN_WIDTH_PX = 48;
@@ -92,7 +93,7 @@ const fieldsOf = (columns: readonly GridColumn<never>[]) => columns.map(column =
  */
 @Component({
   selector: 'ui-data-grid',
-  imports: [MatInputModule, NgTemplateOutlet, MatIconModule, MatMenuModule, MatPaginatorModule],
+  imports: [MatInput, NgTemplateOutlet, MatIconModule, MatMenuModule, MatPaginator],
   templateUrl: './data-grid.component.html',
   styleUrl: './data-grid.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

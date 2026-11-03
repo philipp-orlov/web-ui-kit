@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { settle } from '../../testing/helpers';
 import { DataGridComponent } from './data-grid.component';
 import { GridCellDirective } from './data-grid.directives';
-import { GridColumn, GridState, GroupDescriptor, SortDescriptor } from '@ui-kit/core/grid';
+import { GridColumn, GridState, GroupDescriptor, SortDescriptor } from '@web-ui-kit/core/grid';
 
 interface Person {
   name: string;

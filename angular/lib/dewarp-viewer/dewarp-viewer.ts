@@ -16,7 +16,7 @@ import {
   viewChild,
   computed,
 } from '@angular/core';
-import { DewarpRendererLike, RenderFrame } from '@ui-kit/core/dewarp';
+import { DewarpRendererLike, RenderFrame } from '@web-ui-kit/core/dewarp';
 import { DEWARP_RENDERER_FACTORY } from './renderer-token';
 import {
   DEFAULT_FOV,
@@ -28,9 +28,9 @@ import {
   SourceKind,
   ViewMode,
   ViewState,
-} from '@ui-kit/core/dewarp';
-import { resolveLens } from '@ui-kit/core/dewarp';
-import { detectSourceKind, HlsAttachment } from '@ui-kit/core/dewarp';
+} from '@web-ui-kit/core/dewarp';
+import { resolveLens } from '@web-ui-kit/core/dewarp';
+import { detectSourceKind, HlsAttachment } from '@web-ui-kit/core/dewarp';
 import {
   clampVelocity,
   clampView,
@@ -41,7 +41,7 @@ import {
   modesForMount,
   panoramaSpanDeg,
   wheelToFovFactor,
-} from '@ui-kit/core/dewarp';
+} from '@web-ui-kit/core/dewarp';
 
 type Status = 'idle' | 'loading' | 'playing' | 'paused' | 'error';
 

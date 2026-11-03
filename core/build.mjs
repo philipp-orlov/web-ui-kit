@@ -1,4 +1,4 @@
-// Builds @ui-kit/core: one ES module per entry point (shared code split into chunks, so two entry points never carry
+// Builds @web-ui-kit/core: one ES module per entry point (shared code split into chunks, so two entry points never carry
 // two copies of a module), and the .d.ts files from tsc. No framework, no runtime dependencies.
 import { execFileSync } from 'node:child_process';
 import { rmSync } from 'node:fs';

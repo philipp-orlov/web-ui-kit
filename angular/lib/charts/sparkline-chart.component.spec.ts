@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { SparklineSeries } from '@ui-kit/core/charts';
+import { SparklineSeries } from '@web-ui-kit/core/charts';
 
 import { settle } from '../../testing/helpers';
 import { SparklineChartComponent } from './sparkline-chart.component';

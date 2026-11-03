@@ -1,7 +1,7 @@
 {
-  "name": "@ui-kit/core",
+  "name": "@web-ui-kit/core",
   "version": "0.1.0",
-  "description": "Framework-free logic of the ui-kit: grid processing, chart drawing, PDF/SVG/XLSX/CSV/ZIP export, formatting, theming, dewarping. Shared by @ui-kit/angular and any future React or other UI layer.",
+  "description": "Framework-free logic of the ui-kit: grid processing, chart drawing, PDF/SVG/XLSX/CSV/ZIP export, formatting, theming, dewarping. Shared by @web-ui-kit/angular and any future React or other UI layer.",
   "license": "Apache-2.0",
   "type": "module",
   "sideEffects": false,

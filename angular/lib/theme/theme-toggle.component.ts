@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { THEME_OPTIONS } from '@ui-kit/core/theme';
+import { THEME_OPTIONS } from '@web-ui-kit/core/theme';
 
 import { ThemeService } from './theme.service';
 

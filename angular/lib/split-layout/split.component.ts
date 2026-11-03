@@ -11,7 +11,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { fitPanes, sashTarget } from '@ui-kit/core/split';
+import { fitPanes, sashTarget } from '@web-ui-kit/core/split';
 
 import type { SplitPaneComponent } from './split-pane.component';
 

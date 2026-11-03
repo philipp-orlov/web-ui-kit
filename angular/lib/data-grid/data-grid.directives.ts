@@ -1,6 +1,6 @@
 import { Directive, TemplateRef, inject } from '@angular/core';
 
-import { GridColumn, GridGroupRow } from '@ui-kit/core/grid';
+import { GridColumn, GridGroupRow } from '@web-ui-kit/core/grid';
 
 export interface GridCellContext<T = unknown> {
   /** The column's value. */

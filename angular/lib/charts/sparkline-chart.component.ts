@@ -22,10 +22,10 @@ import {
   indexFromX,
   sparklineLayout,
   sparklineSummary,
-} from '@ui-kit/core/charts';
+} from '@web-ui-kit/core/charts';
 
 /**
- * A compact scrolling multi-line chart on a canvas (see drawSparkline in @ui-kit/core/charts). It redraws when its
+ * A compact scrolling multi-line chart on a canvas (see drawSparkline in @web-ui-kit/core/charts). It redraws when its
  * inputs change, when it is resized and while the pointer moves over it, never on a timer, so an idle dashboard costs
  * nothing.
  *

@@ -119,7 +119,7 @@
   th,
   td {
     box-sizing: border-box;
-    padding: 0 12px;
+    padding: 0 var(--ui-grid-cell-padding, 12px);
     overflow: hidden;
     border-bottom: 1px solid var(--mat-sys-outline-variant);
     text-align: left;
@@ -137,9 +137,9 @@ thead {
   z-index: 2;
 
   th {
-    height: 48px;
-    background: var(--mat-sys-surface);
-    font: var(--mat-sys-title-small);
+    height: var(--ui-grid-header-height, 48px);
+    background: var(--ui-grid-header-background, var(--mat-sys-surface));
+    font: var(--ui-grid-header-font, var(--mat-sys-title-small));
   }
 }
 

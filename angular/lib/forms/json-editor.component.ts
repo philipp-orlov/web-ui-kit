@@ -3,7 +3,7 @@
 import { Component, computed, ElementRef, input, output, viewChild } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { jsonHtml } from '@ui-kit/core/format';
+import { jsonHtml } from '@web-ui-kit/core/format';
 
 /** A multi-line `matInput` for JSON that colors what is typed: the text is drawn by a `<pre>` behind a textarea whose own text is clear. */
 @Component({

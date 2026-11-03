@@ -59,6 +59,6 @@ describe('xlsx writer', () => {
     // a date is a serial number, not text
     expect(sheet).not.toContain('1815-12-10');
     expect(text(files.get('xl/workbook.xml')!)).toContain('name="People"');
-    expect(text(files.get('docProps/core.xml')!)).toContain('<dc:creator>ui-kit</dc:creator>');
+    expect(text(files.get('docProps/core.xml')!)).toContain('<dc:creator>web-ui-kit</dc:creator>');
   });
 });

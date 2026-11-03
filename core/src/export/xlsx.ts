@@ -200,7 +200,7 @@ export interface WorkbookMeta {
 export async function buildWorkbook(sheets: XlsxSheet[], styles: XlsxStyles, meta: WorkbookMeta): Promise<Uint8Array> {
   const now = meta.now ?? new Date();
   const title = meta.title;
-  const creator = meta.creator ?? 'ui-kit';
+  const creator = meta.creator ?? 'web-ui-kit';
   // ---- the package ----------------------------------------------------------------------------------------------------
   const rel = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
   const entries = [

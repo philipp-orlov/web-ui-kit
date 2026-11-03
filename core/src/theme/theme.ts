@@ -5,7 +5,7 @@
 
 export type ThemeChoice = 'system' | 'light' | 'dark';
 
-export const DEFAULT_THEME_STORAGE_KEY = 'ui-kit.theme';
+export const DEFAULT_THEME_STORAGE_KEY = 'web-ui-kit.theme';
 
 export function storedTheme(key = DEFAULT_THEME_STORAGE_KEY): ThemeChoice {
   try {

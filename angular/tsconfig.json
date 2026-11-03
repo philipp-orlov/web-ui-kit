@@ -19,7 +19,7 @@
       "dom.iterable"
     ],
     "paths": {
-      "@ui-kit/angular/*": [
+      "@web-ui-kit/angular/*": [
         "./lib/*"
       ]
     }

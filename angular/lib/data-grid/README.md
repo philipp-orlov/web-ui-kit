@@ -42,7 +42,7 @@ The user can:
 | `index.ts` | The public API. Import from the folder, not from the files. |
 
 ```ts
-import { DataGridComponent, GridCellDirective, GridColumn } from '@ui-kit/angular/data-grid';
+import { DataGridComponent, GridCellDirective, GridColumn } from '@web-ui-kit/angular/data-grid';
 ```
 
 ## Quick start
@@ -50,7 +50,7 @@ import { DataGridComponent, GridCellDirective, GridColumn } from '@ui-kit/angula
 ```ts
 import { Component, signal } from '@angular/core';
 
-import { DataGridComponent, GridColumn, GroupDescriptor } from '@ui-kit/angular/data-grid';
+import { DataGridComponent, GridColumn, GroupDescriptor } from '@web-ui-kit/angular/data-grid';
 
 interface Person {
   name: string;
@@ -256,7 +256,7 @@ import { Component, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
-import { DataGridComponent, GridColumn, GridState, effectiveSort } from '@ui-kit/angular/data-grid';
+import { DataGridComponent, GridColumn, GridState, effectiveSort } from '@web-ui-kit/angular/data-grid';
 
 interface Order {
   id: number;
@@ -370,7 +370,7 @@ rating as a row of star icons. The rows are 48 pixels high to fit the 32-pixel i
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
-import { DataGridComponent, GridCellDirective, GridColumn } from '@ui-kit/angular/data-grid';
+import { DataGridComponent, GridCellDirective, GridColumn } from '@web-ui-kit/angular/data-grid';
 
 interface Contact {
   id: number;
@@ -507,7 +507,7 @@ value in place. This is how Browse Data edits a cell:
 import { Component, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 
-import { CellRef, DataGridComponent, GridCellDirective, GridColumn } from '@ui-kit/angular/data-grid';
+import { CellRef, DataGridComponent, GridCellDirective, GridColumn } from '@web-ui-kit/angular/data-grid';
 
 @Component({
   selector: 'app-people-editor',
@@ -577,7 +577,7 @@ off as well:
 for example to sort an export the way the grid shows it:
 
 ```ts
-import { defaultCompare, effectiveSort } from '@ui-kit/angular/data-grid';
+import { defaultCompare, effectiveSort } from '@web-ui-kit/angular/data-grid';
 
 const order = effectiveSort(group, sort);
 const sorted = [...rows].sort((a, b) => {
@@ -594,7 +594,14 @@ const sorted = [...rows].sort((a, b) => {
 ## Styling
 
 The grid has no styles of its own for color or type: it uses the Material 3 tokens of the theme. Set the density of
-the rows with `rowHeight` (the header row is 48 pixels high).
+the rows with `rowHeight`. These custom properties on the grid element set the rest:
+
+| Property | Default | Sets |
+| --- | --- | --- |
+| `--ui-grid-header-height` | `48px` | The height of the header row (and of the filter row). |
+| `--ui-grid-header-background` | `var(--mat-sys-surface)` | The background of the header rows (opaque: they stay on top while rows scroll). Set it to the colour of the card the grid sits in. |
+| `--ui-grid-header-font` | `var(--mat-sys-title-small)` | The font of the header cells. |
+| `--ui-grid-cell-padding` | `12px` | The left and right padding of every cell. |
 
 These classes are stable and can be used as hooks in host styles and in tests:
 

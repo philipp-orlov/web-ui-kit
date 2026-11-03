@@ -1,5 +1,5 @@
 {
-  "name": "ui-kit-angular-workspace",
+  "name": "web-ui-kit-angular-workspace",
   "private": true,
   "scripts": {
     "build": "npm --prefix ../core run build && ng build ui-kit",
@@ -19,7 +19,7 @@
     "hls.js": "^1.5.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "@ui-kit/core": "file:../core"
+    "@web-ui-kit/core": "file:../core"
   },
   "devDependencies": {
     "@angular/build": "^22.1.8",

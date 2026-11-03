@@ -11,7 +11,7 @@ import {
   hexRowCount,
   hexRowOffset,
   hexTitle,
-} from '@ui-kit/core/hex';
+} from '@web-ui-kit/core/hex';
 
 /** A hex dump with an ASCII column, regions in colour and one highlighted range; only the visible rows are drawn. */
 @Component({

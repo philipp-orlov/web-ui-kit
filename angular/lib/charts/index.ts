@@ -6,4 +6,4 @@ export {
   indexFromX,
   type SparklineColors,
   type SparklineSeries,
-} from '@ui-kit/core/charts';
+} from '@web-ui-kit/core/charts';

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DewarpViewer } from './dewarp-viewer';
-import { DewarpRendererLike, RenderFrame } from '@ui-kit/core/dewarp';
+import { DewarpRendererLike, RenderFrame } from '@web-ui-kit/core/dewarp';
 import { DEWARP_RENDERER_FACTORY } from './renderer-token';
-import { DewarpError } from '@ui-kit/core/dewarp';
+import { DewarpError } from '@web-ui-kit/core/dewarp';
 
 class FakeRenderer implements DewarpRendererLike {
   contextLost = false;
