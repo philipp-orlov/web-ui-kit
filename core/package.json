@@ -1,0 +1,75 @@
+{
+  "name": "@ui-kit/core",
+  "version": "0.1.0",
+  "description": "Framework-free logic of the ui-kit: grid processing, chart drawing, PDF/SVG/XLSX/CSV/ZIP export, formatting, theming, dewarping. Shared by @ui-kit/angular and any future React or other UI layer.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./grid": {
+      "types": "./dist/grid/index.d.ts",
+      "default": "./dist/grid/index.js"
+    },
+    "./charts": {
+      "types": "./dist/charts/index.d.ts",
+      "default": "./dist/charts/index.js"
+    },
+    "./export": {
+      "types": "./dist/export/index.d.ts",
+      "default": "./dist/export/index.js"
+    },
+    "./format": {
+      "types": "./dist/format/index.d.ts",
+      "default": "./dist/format/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "default": "./dist/theme/index.js"
+    },
+    "./dom": {
+      "types": "./dist/dom/index.d.ts",
+      "default": "./dist/dom/index.js"
+    },
+    "./hex": {
+      "types": "./dist/hex/index.d.ts",
+      "default": "./dist/hex/index.js"
+    },
+    "./split": {
+      "types": "./dist/split/index.d.ts",
+      "default": "./dist/split/index.js"
+    },
+    "./dewarp": {
+      "types": "./dist/dewarp/index.d.ts",
+      "default": "./dist/dewarp/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "jsdom": "^28.0.0",
+    "typescript": "~6.0.2",
+    "vitest": "^4.0.8",
+    "@types/node": "^22.0.0",
+    "hls.js": "^1.5.0"
+  },
+  "peerDependencies": {
+    "hls.js": "^1.5.0"
+  },
+  "peerDependenciesMeta": {
+    "hls.js": {
+      "optional": true
+    }
+  }
+}

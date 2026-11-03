@@ -1,0 +1,30 @@
+{
+  "name": "@ui-kit/angular",
+  "version": "0.1.0",
+  "description": "Shared Angular components and framework-free exporters for libsql, gscope and dewarp-viewer.",
+  "license": "Apache-2.0",
+  "sideEffects": false,
+  "peerDependencies": {
+    "@ui-kit/core": "^0.1.0",
+    "@angular/cdk": "^22.1.0",
+    "@angular/common": "^22.1.0",
+    "@angular/core": "^22.1.0",
+    "@angular/material": "^22.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/cdk": {
+      "optional": true
+    },
+    "@angular/material": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "exports": {
+    "./styles/theme": {
+      "sass": "./styles/_theme.scss"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "types": [], "declaration": true, "emitDeclarationOnly": true, "noEmit": false },
+  "exclude": ["src/**/*.spec.ts", "src/export/test-fonts.ts"]
+}

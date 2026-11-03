@@ -1,0 +1,57 @@
+// Copyright (c) 2026 Philipp Orlov
+
+// The page-level styles every ui-kit app shares. Use it once, in the app's global stylesheet:
+//
+//   @use '@ui-kit/angular/styles/theme' as ui;
+//   html { @include ui.theme(mat.$azure-palette); }
+//   @include ui.globals;
+//
+// `theme` sets up a Material 3 theme that follows `html[data-theme]` (ThemeService) and else the browser's setting.
+// Pass `$scheme: dark` for an app that is always dark (gscope).
+
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin theme($primary, $tertiary: null, $density: 0, $scheme: light dark, $typography: Roboto) {
+  $color: (primary: $primary);
+  @if $tertiary {
+    $color: map.merge($color, (tertiary: $tertiary));
+  }
+  @if $scheme == dark {
+    $color: map.merge($color, (theme-type: dark));
+  }
+  color-scheme: $scheme;
+  @include mat.theme((color: $color, typography: $typography, density: $density));
+
+  &[data-theme='light'] {
+    color-scheme: light;
+  }
+  &[data-theme='dark'] {
+    color-scheme: dark;
+  }
+}
+
+@mixin globals {
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    background: var(--mat-sys-surface);
+    color: var(--mat-sys-on-surface);
+    font: var(--mat-sys-body-medium);
+  }
+
+  .mono {
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+  }
+
+  // The panels (overlays) of the ui-kit form fields: compact options, outside any component's styles.
+  .ui-field-panel {
+    --mat-option-label-text-size: 13px;
+    --mat-option-label-text-line-height: 18px;
+    --mat-option-label-text-tracking: 0;
+  }
+}
