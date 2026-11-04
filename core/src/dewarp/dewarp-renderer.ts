@@ -121,6 +121,11 @@ export class DewarpRenderer implements DewarpRendererLike {
     const gl = this.gl;
     gl.bindTexture(gl.TEXTURE_2D, this.texture);
     if (width !== this.texW || height !== this.texH) {
+      // A frame larger than the GPU limit (often 4096 on small devices) would give a black picture and no error.
+      const limit = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
+      if (width > limit || height > limit) {
+        throw new Error(`Frame ${width}x${height} is larger than this GPU's maximum texture size of ${limit}.`);
+      }
       // (Re)allocate storage only when the size changes; afterwards the
       // GPU memory is reused in place by texSubImage2D.
       gl.texImage2D(
