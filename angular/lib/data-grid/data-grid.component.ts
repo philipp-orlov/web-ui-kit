@@ -7,6 +7,7 @@ import {
   afterNextRender,
   computed,
   contentChild,
+  effect,
   inject,
   input,
   linkedSignal,
@@ -66,6 +67,43 @@ interface DragView {
   valid: boolean;
   /** Where the dragged item would land, relative to the grid. */
   indicator: { left: number; top: number; height: number } | null;
+}
+
+interface StoredLayout {
+  order?: string[];
+  hidden?: string[];
+  widths?: Record<string, number>;
+  sort?: SortDescriptor[];
+  group?: GroupDescriptor[];
+}
+
+function readLayout(storageKey: string): StoredLayout | null {
+  try {
+    const text = localStorage.getItem(storageKey);
+    return text ? (JSON.parse(text) as StoredLayout) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeLayout(storageKey: string, layout: StoredLayout): void {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(layout));
+  } catch {
+    /* storage is blocked or full: the layout is just not remembered */
+  }
+}
+
+/** The stored order of the fields that exist; a field the store does not know goes after the one before it in `fields`. */
+function mergeOrder(stored: readonly string[], fields: readonly string[]): string[] {
+  const known = new Set(fields);
+  const result = stored.filter(f => known.has(f));
+  fields.forEach((field, index) => {
+    if (result.includes(field)) return;
+    const before = fields.slice(0, index).reverse().find(f => result.includes(f));
+    result.splice(before === undefined ? 0 : result.indexOf(before) + 1, 0, field);
+  });
+  return result;
 }
 
 function sameFields(a: readonly string[], b: readonly string[]): boolean {
@@ -128,6 +166,12 @@ export class DataGridComponent<T = unknown> {
   readonly columnWidth = input(160);
   /** Stretches or squeezes the columns (the ones the user has not resized) to the width of the grid, so none is cut off. */
   readonly fit = input(false);
+  /**
+   * Remembers the layout under this name (in the browser's local storage): the order, visibility and widths of the
+   * columns, and the sort and grouping. It comes back when the grid does, on another page or in another visit. Columns
+   * that the grid has now and the stored layout does not know keep their default place. Leave empty to remember nothing.
+   */
+  readonly layoutKey = input('');
   /** Server mode: how long typing in a filter box pauses before `stateChange`. */
   readonly filterDelay = input(300);
   readonly emptyText = input('No records to display');
@@ -284,6 +328,51 @@ export class DataGridComponent<T = unknown> {
   private anchorRow: number | null = null;
   private filterTimer: ReturnType<typeof setTimeout> | undefined;
   private stopTracking: (() => void) | null = null;
+
+  /** What the layout was last applied for: the name and the fields, so a change of either applies it again. */
+  private appliedLayout = '';
+
+  /** Applies the stored layout when the name or the set of columns changes, and stores every change after that. */
+  private readonly keepLayout = effect(() => {
+    const key = this.layoutKey();
+    const fields = fieldsOf(this.columns());
+    const order = this.order();
+    const hidden = this.hidden();
+    const widths = this.widths();
+    const sort = this.sort();
+    const group = this.group();
+    if (!key) {
+      this.appliedLayout = '';
+      return;
+    }
+    const storageKey = 'ui-grid:' + key;
+    const stored = readLayout(storageKey);
+    const applying = key + '\n' + fields.join('\n');
+    if (applying !== this.appliedLayout) {
+      this.appliedLayout = applying;
+      if (stored) {
+        const known = new Set(fields);
+        if (stored.order) this.order.set(mergeOrder(stored.order, fields));
+        if (stored.hidden) this.hidden.set(new Set(stored.hidden.filter(f => known.has(f))));
+        if (stored.widths) {
+          this.widths.set(new Map(Object.entries(stored.widths).filter(([f, w]) => known.has(f) && Number.isFinite(w))));
+        }
+        if (stored.sort) this.sort.set(stored.sort.filter(d => known.has(d.field)));
+        if (stored.group) this.group.set(stored.group.filter(d => known.has(d.field)));
+      }
+      return;
+    }
+    const known = new Set(fields);
+    // What the stored layout says about columns this grid does not have now (another view of the same table) is kept.
+    const others = stored?.hidden?.filter(f => !known.has(f)) ?? [];
+    writeLayout(storageKey, {
+      order,
+      hidden: [...hidden, ...others],
+      widths: { ...Object.fromEntries(Object.entries(stored?.widths ?? {}).filter(([f]) => !known.has(f))), ...Object.fromEntries(widths) },
+      sort,
+      group,
+    });
+  });
 
   constructor() {
     this.destroyRef.onDestroy(() => {

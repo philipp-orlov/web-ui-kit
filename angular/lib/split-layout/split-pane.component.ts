@@ -1,4 +1,5 @@
 import {
+  effect,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -102,6 +103,12 @@ export class SplitPaneComponent implements OnDestroy {
   /** Draws no header at all (then there is no Maximise button either). */
   readonly headerless = input(false, { transform: booleanAttribute });
 
+  /**
+   * Remembers the size the user dragged this pane to under this name (in the browser's local storage), so that it is
+   * the same when the pane comes back, on another page or in another visit. Leave empty to remember nothing.
+   */
+  readonly layoutKey = input('');
+
   /** The size the user dragged to; null while the pane still has its initial size. */
   readonly current = signal<number | null>(null);
   protected readonly dragging = signal(false);
@@ -129,8 +136,39 @@ export class SplitPaneComponent implements OnDestroy {
   private dragStart = 0;
   private startSize = 0;
 
+  private loadedKey: string | null = null;
+
   constructor() {
     this.split.register(this);
+    // Takes the stored size when the name is first known (or changes), and stores each size from then on.
+    effect(() => {
+      const key = this.layoutKey();
+      const size = this.current();
+      if (!key) {
+        this.loadedKey = null;
+        return;
+      }
+      const storageKey = 'ui-split:' + key;
+      if (key !== this.loadedKey) {
+        this.loadedKey = key;
+        let saved: number | null = null;
+        try {
+          const text = localStorage.getItem(storageKey);
+          const value = text === null ? NaN : Number(text);
+          saved = Number.isFinite(value) && value >= this.minSize() ? value : null;
+        } catch {
+          /* storage is blocked: the pane starts at its initial size */
+        }
+        this.current.set(saved);
+        return;
+      }
+      try {
+        if (size === null) localStorage.removeItem(storageKey);
+        else localStorage.setItem(storageKey, String(Math.round(size)));
+      } catch {
+        /* nothing to do: the size is just not remembered */
+      }
+    });
   }
 
   ngOnDestroy(): void {
