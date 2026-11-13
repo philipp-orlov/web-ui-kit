@@ -38,6 +38,7 @@ import { buildView, columnText, columnTitle, columnValue, effectiveSort, filterI
 const DRAG_THRESHOLD_PX = 5;
 const MIN_COLUMN_WIDTH_PX = 48;
 const MAX_FIT_WIDTH_PX = 600;
+const FIT_MIN_COLUMN_WIDTH_PX = 48;
 const INDENT_WIDTH_PX = 32;
 const ROW_NUMBER_WIDTH_PX = 56;
 /** Rows rendered above and below the visible ones, so a fast scroll shows no gap. */
@@ -125,6 +126,8 @@ export class DataGridComponent<T = unknown> {
   readonly rowHeight = input(40);
   /** The width of a column that sets none and that the user has not resized. */
   readonly columnWidth = input(160);
+  /** Stretches or squeezes the columns (the ones the user has not resized) to the width of the grid, so none is cut off. */
+  readonly fit = input(false);
   /** Server mode: how long typing in a filter box pauses before `stateChange`. */
   readonly filterDelay = input(300);
   readonly emptyText = input('No records to display');
@@ -178,6 +181,21 @@ export class DataGridComponent<T = unknown> {
   protected readonly groupLevels = computed(() => this.validGroup().map((_, level) => level));
   /** Every column of the table: indents, row numbers, data columns and the filler that takes the rest. */
   protected readonly colCount = computed(() => this.groupLevels().length + (this.rowNumbers() ? 1 : 0) + this.visibleColumns().length + 1);
+  /** The width the rows have to fit in, as measured from the scroller. */
+  private readonly viewWidth = signal(0);
+  /** The factor the columns that were not resized by hand are scaled by to fill the view (1 when `fit` is off). */
+  private readonly fitScale = computed(() => {
+    const view = this.viewWidth() - 2; // a little slack, so that the table never pushes its own container wider
+    if (!this.fit() || view <= 0) return 1;
+    let fixed = this.groupLevels().length * INDENT_WIDTH_PX + (this.rowNumbers() ? ROW_NUMBER_WIDTH_PX : 0);
+    let flexible = 0;
+    for (const column of this.visibleColumns()) {
+      const own = this.widths().get(column.field);
+      if (own !== undefined) fixed += own;
+      else flexible += column.width ?? this.columnWidth();
+    }
+    return flexible > 0 && view > fixed ? (view - fixed) / flexible : 1;
+  });
   protected readonly tableWidth = computed(
     () =>
       this.groupLevels().length * INDENT_WIDTH_PX +
@@ -275,7 +293,10 @@ export class DataGridComponent<T = unknown> {
     // Scrolling sets a signal and nothing else: a render happens only when the range of rows changes.
     afterNextRender(() => {
       const element = this.scroller().nativeElement;
-      const measure = () => this.viewport.set({ top: element.scrollTop, height: element.clientHeight });
+      const measure = () => {
+        this.viewport.set({ top: element.scrollTop, height: element.clientHeight });
+        if (this.viewWidth() !== element.clientWidth) this.viewWidth.set(element.clientWidth);
+      };
       element.addEventListener('scroll', measure, { passive: true });
       const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
       observer?.observe(element);
@@ -301,7 +322,11 @@ export class DataGridComponent<T = unknown> {
   }
 
   protected widthOf(column: GridColumn<T>): number {
-    return this.widths().get(column.field) ?? column.width ?? this.columnWidth();
+    const own = this.widths().get(column.field);
+    if (own !== undefined) return own;
+    const base = column.width ?? this.columnWidth();
+    const scale = this.fitScale();
+    return scale === 1 ? base : Math.max(Math.min(base, Math.max(FIT_MIN_COLUMN_WIDTH_PX, Math.round(base * 0.85))), Math.floor(base * scale));
   }
 
   protected canSort(column: GridColumn<T>): boolean {
