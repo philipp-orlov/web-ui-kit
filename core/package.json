@@ -49,6 +49,10 @@
     "./dewarp": {
       "types": "./dist/dewarp/index.d.ts",
       "default": "./dist/dewarp/index.js"
+    },
+    "./upload": {
+      "types": "./dist/upload/index.d.ts",
+      "default": "./dist/upload/index.js"
     }
   },
   "scripts": {

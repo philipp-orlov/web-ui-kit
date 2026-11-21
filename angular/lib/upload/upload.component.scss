@@ -1,0 +1,186 @@
+:host {
+  display: block;
+}
+
+.zone {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  border: 2px dashed var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  background: var(--mat-sys-surface-container-low);
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+
+  &.dragging {
+    border-color: var(--mat-sys-primary);
+    background: var(--mat-sys-primary-container);
+  }
+}
+
+.intro {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-medium);
+  line-height: 1.5;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.choose {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+
+  button mat-icon {
+    margin-right: 6px;
+  }
+}
+
+.or {
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-body-small);
+}
+
+.problems {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  font: var(--mat-sys-body-small);
+
+  li {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 2px 0;
+
+    mat-icon {
+      flex: none;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0 4px;
+  color: var(--mat-sys-on-surface-variant);
+  font: var(--mat-sys-label-large);
+}
+
+.files {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font: var(--mat-sys-body-medium);
+    font-weight: 500;
+  }
+
+  .size {
+    flex: none;
+    color: var(--mat-sys-on-surface-variant);
+    font: var(--mat-sys-body-small);
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    color: var(--mat-sys-on-surface-variant);
+    font: var(--mat-sys-body-small);
+
+    &.outcome mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &[data-level='success'] .outcome {
+    color: var(--mat-sys-primary);
+  }
+
+  &[data-level='warning'] .outcome {
+    color: var(--mat-sys-tertiary);
+  }
+
+  &[data-level='error'] .outcome {
+    color: var(--mat-sys-error);
+  }
+}
+
+// One bar per file. The fill follows the bytes sent; while the server works on the file, the bar only moves.
+.bar {
+  position: relative;
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 3px;
+  background: var(--mat-sys-surface-variant);
+  overflow: hidden;
+
+  i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 3px;
+    background: var(--mat-sys-primary);
+    transition: width 0.15s linear;
+  }
+
+  &.indeterminate i {
+    width: 35%;
+    animation: slide 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes slide {
+  from {
+    left: -35%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar.indeterminate i {
+    animation: none;
+    left: 0;
+    width: 100%;
+    opacity: 0.4;
+  }
+}

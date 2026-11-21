@@ -1,0 +1,58 @@
+<div class="zone" [class.dragging]="dragging()" (dragover)="over($event)" (dragleave)="dragging.set(false)" (drop)="drop($event)">
+  <div class="intro"><ng-content /></div>
+  <div class="choose">
+    <button mat-flat-button type="button" (click)="picker.click()"><mat-icon>upload_file</mat-icon>{{ chooseLabel() }}</button>
+    <span class="or">or drag files here</span>
+  </div>
+  <input #picker type="file" multiple hidden [accept]="accept()" (change)="pick($event)" />
+</div>
+
+@if (problems().length > 0) {
+  <ul class="problems" role="alert">
+    @for (problem of problems(); track $index) {
+      <li><mat-icon>error_outline</mat-icon>{{ problem }}</li>
+    }
+  </ul>
+}
+
+@if (items().length > 0) {
+  <div class="summary" role="status" aria-live="polite">
+    {{ doneCount() }} of {{ items().length }} finished
+    @if (!busy()) {
+      <button mat-button type="button" (click)="clearFinished()">Clear the list</button>
+    }
+  </div>
+
+  <ul class="files">
+    @for (item of items(); track item.id) {
+      <li class="file" [attr.data-state]="item.state" [attr.data-level]="item.outcome?.level ?? ''">
+        <div class="head">
+          <span class="name" [title]="item.file.name">{{ item.file.name }}</span>
+          <span class="size">{{ size(item.file.size) }}</span>
+        </div>
+
+        @switch (item.state) {
+          @case ('waiting') {
+            <div class="status">Waiting for its turn</div>
+          }
+          @case ('uploading') {
+            <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="percent(item)" [attr.aria-label]="item.file.name">
+              <i [style.width.%]="percent(item)"></i>
+            </div>
+            <div class="status">Sending… {{ percent(item) }}%</div>
+          }
+          @case ('processing') {
+            <div class="bar indeterminate"><i></i></div>
+            <div class="status">Sent. The server is checking the file…</div>
+          }
+          @case ('done') {
+            <div class="status outcome">
+              <mat-icon>{{ iconFor(item) }}</mat-icon>
+              <span>{{ item.outcome?.message }}</span>
+            </div>
+          }
+        }
+      </li>
+    }
+  </ul>
+}

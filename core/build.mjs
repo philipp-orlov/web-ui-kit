@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { rmSync } from 'node:fs';
 import { build } from 'esbuild';
 
-const entries = ['index', 'grid', 'charts', 'export', 'format', 'theme', 'dom', 'hex', 'split', 'dewarp'];
+const entries = ['index', 'grid', 'charts', 'export', 'format', 'theme', 'dom', 'hex', 'split', 'dewarp', 'upload'];
 
 rmSync('dist', { recursive: true, force: true });
 await build({

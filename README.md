@@ -4,8 +4,8 @@ Shared UI building blocks for libsql's sql tool, gscope and dewarp-viewer-demo, 
 
 | Package | Folder | What it holds |
 | --- | --- | --- |
-| `@web-ui-kit/core` | [core/](core/) | Everything that is not rendering, in plain TypeScript with no framework: grid filtering, sorting and grouping; sparkline and report chart drawing; PDF (with TrueType subsetting), SVG, XLSX, CSV and ZIP writers; number, date and size formatting; theme persistence; hex-dump layout; split-pane sizing; the fisheye dewarping engine (lens models, view maths, WebGL 2 renderer). |
-| `@web-ui-kit/angular` | [angular/](angular/) | Angular 22 + Material 3 components on top of core: `ui-data-grid`, `ui-split` / `ui-split-pane`, `ui-sparkline-chart`, `ui-select` / `ui-combo` / `ui-date` / `ui-text` / `ui-json-editor`, `ui-theme-toggle`, `ui-hex-dump`, `ui-confirm-dialog`, `ui-dewarp-viewer`, the `binarySize` pipe. |
+| `@web-ui-kit/core` | [core/](core/) | Everything that is not rendering, in plain TypeScript with no framework: grid filtering, sorting and grouping; sparkline and report chart drawing; PDF (with TrueType subsetting), SVG, XLSX, CSV and ZIP writers; number, date and size formatting; theme persistence; hex-dump layout; split-pane sizing; file selection checks and an upload queue with per-file progress; the fisheye dewarping engine (lens models, view maths, WebGL 2 renderer). |
+| `@web-ui-kit/angular` | [angular/](angular/) | Angular 22 + Material 3 components on top of core: `ui-data-grid`, `ui-split` / `ui-split-pane`, `ui-sparkline-chart`, `ui-select` / `ui-combo` / `ui-date` / `ui-text` / `ui-json-editor`, `ui-theme-toggle`, `ui-hex-dump`, `ui-confirm-dialog`, `ui-dewarp-viewer`, `ui-upload` (choose and send files with a progress bar each), the `binarySize` pipe. |
 | (later) `@web-ui-kit/react` | [react/](react/) | Not written yet: see [react/README.md](react/README.md) for how it would sit on the same core. |
 
 The rule that keeps the layers apart: **a file in `core/` imports no framework**. If a change needs

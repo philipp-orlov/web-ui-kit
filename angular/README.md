@@ -13,6 +13,7 @@ theme. Each entry point re-exports the core types it uses, so an app needs one i
 | `@web-ui-kit/angular/theme` | `ThemeService`, `THEME_STORAGE_KEY`, `ui-theme-toggle`. |
 | `@web-ui-kit/angular/dialogs` | `ui-confirm-dialog` (`ConfirmDialogComponent`, opened with `MatDialog`). |
 | `@web-ui-kit/angular/hex-dump` | `ui-hex-dump`. |
+| `@web-ui-kit/angular/upload` | `ui-upload`: choose or drop files, check them, send them a few at a time, a progress bar for each, the server's answer in words. See [lib/upload/README.md](lib/upload/README.md). |
 | `@web-ui-kit/angular/dewarp-viewer` | `ui-dewarp-viewer` (`DewarpViewer`), `DEWARP_RENDERER_FACTORY`. |
 | `@web-ui-kit/angular/utils` | `binarySize` pipe. |
 | `@web-ui-kit/angular/styles/theme` (Sass) | `ui.theme(...)` and `ui.globals` mixins. |
