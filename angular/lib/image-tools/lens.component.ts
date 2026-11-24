@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Philipp Orlov
 
 import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, input, viewChild } from '@angular/core';
-import { lensSource, placeLens, type Box, type Pt } from '@web-ui-kit/core/image';
+import { clampSource, lensSource, placeLens, type Box, type Pt } from '@web-ui-kit/core/image';
 
 /**
  * Where the picture sits in its view, in view pixels: the picture's top-left at (tx, ty), drawn `imageWidth × scale`
@@ -18,9 +18,9 @@ export interface LensView {
 }
 
 /**
- * A magnifier that follows the pointer: a circle showing the picture under the pointer at `zoom` times the view's
- * scale. It sits to the right of the pointer, moving left, below or above it near the borders of the picture, so it
- * never covers the pointer. Place it in a relatively positioned parent the size of the view; it ignores the pointer
+ * A magnifier that follows the pointer: a square with rounded corners showing the picture under the pointer at `zoom` times the view's
+ * scale. It sits to the right of the pointer, moving left, below or above it near the borders of the picture and
+ * clear of any `avoid` rectangles, so it never covers the pointer. Place it in a relatively positioned parent the size of the view; it ignores the pointer
  * itself (pointer-events none), so the parent keeps receiving the mouse.
  */
 @Component({
@@ -41,7 +41,7 @@ export interface LensView {
     }
     .lens {
       position: absolute;
-      border-radius: 50%;
+      border-radius: 14px;
       border: 2px solid rgba(255, 255, 255, 0.92);
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
       background: #000;
@@ -56,8 +56,10 @@ export class LensComponent {
   readonly pointer = input<Pt | null>(null);
   /** Magnification relative to the view's scale. */
   readonly zoom = input(3);
-  /** Diameter in view pixels. */
+  /** Side length in view pixels. */
   readonly size = input(180);
+  /** Rectangles in view pixels the lens must not cover (a toolbar over the picture). */
+  readonly avoid = input<Box[]>([]);
 
   private readonly canvasRef = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
 
@@ -68,7 +70,7 @@ export class LensComponent {
     if (!v || !q || !this.source()) return null;
     const onPicture = q.x >= v.tx && q.y >= v.ty && q.x < v.tx + v.imageWidth * v.scale && q.y < v.ty + v.imageHeight * v.scale;
     if (!onPicture) return null;
-    return placeLens(q, this.size(), visibleBounds(v));
+    return placeLens(q, this.size(), visibleBounds(v), 16, this.avoid());
   });
 
   private readonly paint = effect(() => {
@@ -89,26 +91,43 @@ export class LensComponent {
     ctx.clearRect(0, 0, size, size);
 
     const picture = { x: (q.x - v.tx) / v.scale, y: (q.y - v.ty) / v.scale };
-    const from: Box = lensSource(picture, size, this.zoom(), v.scale);
+    // Near an edge the sampled area would hang over the picture: slide it inside, so the lens shows picture up to the edge.
+    const from: Box = clampSource(lensSource(picture, size, this.zoom(), v.scale), v.imageWidth, v.imageHeight);
+    const k = size / from.w;
     ctx.save();
-    ctx.beginPath();
-    ctx.arc(size / 2, size / 2, size / 2 - 1, 0, Math.PI * 2);
+    roundedSquare(ctx, 1, 1, size - 2, size - 2, LENS_RADIUS - 1);
     ctx.clip();
     ctx.imageSmoothingEnabled = v.scale * this.zoom() < 3;
     ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(src, from.x, from.y, from.w, from.h, 0, 0, size, size);
     ctx.restore();
 
-    // A small cross where the pointer is, so the lens shows exactly which spot it magnifies.
+    // A small cross where the pointer is, so the lens shows exactly which spot it magnifies (it moves off the centre
+    // when the sample was slid inside the picture).
+    const cx = Math.round((picture.x - from.x) * k) + 0.5;
+    const cy = Math.round((picture.y - from.y) * k) + 0.5;
     ctx.strokeStyle = 'rgba(255,255,255,0.9)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(size / 2 - 6, size / 2 + 0.5);
-    ctx.lineTo(size / 2 + 6, size / 2 + 0.5);
-    ctx.moveTo(size / 2 + 0.5, size / 2 - 6);
-    ctx.lineTo(size / 2 + 0.5, size / 2 + 6);
+    ctx.moveTo(cx - 6, cy);
+    ctx.lineTo(cx + 6, cy);
+    ctx.moveTo(cx, cy - 6);
+    ctx.lineTo(cx, cy + 6);
     ctx.stroke();
   });
+}
+
+const LENS_RADIUS = 14;
+
+/** A square with rounded corners, as a path (no ctx.roundRect, so older browsers work too). */
+function roundedSquare(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
 }
 
 /** The part of the view the picture covers: the lens must stay on the picture, not on the grey around it. */

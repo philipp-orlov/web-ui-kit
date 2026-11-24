@@ -1,4 +1,8 @@
-import { lensSource, placeLens } from './lens';
+import { clampSource, lensSource, placeLens } from './lens';
+
+function overlap(a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }): boolean {
+  return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+}
 
 const bounds = { x: 0, y: 0, w: 1000, h: 800 };
 
@@ -45,6 +49,22 @@ describe('placeLens', () => {
     }
   });
 
+  it('skips a side that would cover a rectangle to avoid', () => {
+    // Pointer near the middle-right: the right side would sit on the toolbar, so the lens goes left.
+    const bar = { x: 600, y: 350, w: 300, h: 60 };
+    const l = placeLens({ x: 500, y: 380 }, 200, bounds, 16, [bar]);
+    expect(l.side).toBe('left');
+    expect(overlap(l, bar)).toBe(false);
+  });
+
+  it('pushes a side clear of a toolbar it would overlap, when the pointer is on the toolbar', () => {
+    // Pointer on a bar at the bottom: above the pointer is the bar, so the lens goes above the bar.
+    const bar = { x: 300, y: 700, w: 500, h: 40 };
+    const l = placeLens({ x: 500, y: 720 }, 200, { x: 0, y: 0, w: 1000, h: 800 }, 16, [bar]);
+    expect(overlap(l, bar)).toBe(false);
+    expect(l.y + l.h).toBeLessThanOrEqual(bar.y);
+  });
+
   it('clamps into a picture smaller than the lens', () => {
     const small = { x: 10, y: 10, w: 120, h: 120 };
     const l = placeLens({ x: 60, y: 60 }, 200, small);
@@ -60,5 +80,20 @@ describe('lensSource', () => {
     expect(r.w).toBe(200 / (3 * 0.5));
     expect(r.x + r.w / 2).toBe(500);
     expect(r.y + r.h / 2).toBe(400);
+  });
+});
+
+describe('clampSource', () => {
+  it('moves a sample that hangs over the bottom edge back inside, keeping its size', () => {
+    const r = clampSource({ x: 100, y: 690, w: 60, h: 60 }, 1000, 720);
+    expect(r).toEqual({ x: 100, y: 660, w: 60, h: 60 });
+  });
+
+  it('leaves a sample that is already inside alone', () => {
+    expect(clampSource({ x: 10, y: 20, w: 60, h: 60 }, 1000, 720)).toEqual({ x: 10, y: 20, w: 60, h: 60 });
+  });
+
+  it('shrinks a sample larger than the picture to fit it', () => {
+    expect(clampSource({ x: -20, y: -20, w: 900, h: 900 }, 300, 200)).toEqual({ x: 0, y: 0, w: 300, h: 200 });
   });
 });

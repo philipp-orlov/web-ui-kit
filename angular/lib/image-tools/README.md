@@ -21,7 +21,7 @@ const shown = computed(() => (claheOn() ? claheCanvas(image) : image));   // ima
 ```
 
 ## Behaviour
-- The lens is a circle `size` pixels across. It shows the picture at `zoom` times the view's scale, centred on the
+- The lens is a square with rounded corners, `size` pixels on a side. It shows the picture at `zoom` times the view's scale, centred on the
   pointer, with a small cross at the pointer.
 - It sits to the right of the pointer. Near the picture's right border it moves to the left; near the top or bottom
   it moves below or above. Near a corner it slides along the border. It never covers the pointer.
