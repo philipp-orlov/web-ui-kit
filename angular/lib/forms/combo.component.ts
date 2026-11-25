@@ -17,9 +17,9 @@ import { MatInputModule } from '@angular/material/input';
       @if (label()) {
         <mat-label>{{ label() }}</mat-label>
       }
-      <input matInput [class.mono]="mono()" [value]="typed() ?? value()" [placeholder]="placeholder()" [matAutocomplete]="auto" [attr.aria-label]="label() || placeholder()"
-             (input)="typed.set($any($event.target).value)" (change)="commit($any($event.target).value)" (keydown.enter)="commit($any($event.target).value)" />
-      <mat-autocomplete #auto="matAutocomplete" [class]="panelClass()" (optionSelected)="commit($event.option.value)">
+      <input matInput [class.mono]="mono()" [value]="typed() ?? value()" [placeholder]="placeholder()" [matAutocomplete]="auto" #trigger="matAutocompleteTrigger" [attr.aria-label]="label() || placeholder()"
+             (input)="typed.set($any($event.target).value)" (change)="blurred($any($event.target).value, trigger.panelOpen)" (keydown.enter)="commit($any($event.target).value)" />
+      <mat-autocomplete #auto="matAutocomplete" [class]="panelClass()" (optionSelected)="commit($event.option.value)" (closed)="closed()">
         @for (s of shown(); track s) {
           <mat-option [value]="s">{{ s }}</mat-option>
         }
@@ -50,6 +50,20 @@ export class ComboComponent {
     return t ? all.filter(s => s.toLowerCase().includes(t)) : all;
   });
   private last: string | null = null;
+
+  /**
+   * Pressing the mouse on a suggestion blurs the field first, and committing the half-typed text then re-renders the
+   * list under the pointer, so the click never lands. While the panel is open the commit waits for the choice or for the
+   * panel to close.
+   */
+  protected blurred(text: string, panelOpen: boolean): void {
+    if (!panelOpen) this.commit(text);
+  }
+
+  protected closed(): void {
+    const text = this.typed();
+    if (text !== null) this.commit(text);
+  }
 
   protected commit(text: string): void {
     this.typed.set(null);
